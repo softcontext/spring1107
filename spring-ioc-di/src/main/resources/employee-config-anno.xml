@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- 
+		1. @Component ==> 빈 컨테이너 등록
+		2. @Autowired, @Resource
+	 -->
+	<context:component-scan base-package="com.example.demo.review.anno"/>
+	
+	<!-- 
+		2. @Autowired, @Resource
+	 -->	
+	<!-- <context:annotation-config/> -->
+
+	<bean id="manager1" class="com.example.demo.review.anno.TeamManager">
+		<constructor-arg ref="programmer"/>
+	</bean>
+	
+</beans>

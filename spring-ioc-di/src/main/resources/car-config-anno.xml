@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- 
+		xmlns ==> beans, 디폴트 네임스페이스가 된다. 해당 네임스페이스 안에 태그는
+		네임스페이명을 생략하고 사용할 수 있다.
+		
+		xmlns:context ==> context
+		네임스페이스명을 꼭 붙여서 태그를 사용해야 한다.
+	 -->
+	 
+	<!-- 
+		Annotation을 사용하여 객체생성, 관계설정을 한다고 통보한다.
+		base-package에서부터 하부의 있는 모든 클래스가 잠재적인 처리대상이 된다.
+		다음 애노테이션이 있는 클래스들을 객체로 만들어 빈 컨테이너에 등록하라.
+		@Component, 
+		@Controller, @Service, @Repository, @Configuration ...
+		
+		더불어서, component-scan 설정은 annotation-config 설정을 동반한다.
+	 -->
+	<context:component-scan base-package="com.example.demo.ioc.step6" />
+	
+	<!-- 
+		빈 컨테이너에 등록된 객체들의 관계를 설정하라.
+		주 처리대상 애노테이션: @Autowired, @Resource ...
+	 -->
+	<context:annotation-config />
+
+</beans>

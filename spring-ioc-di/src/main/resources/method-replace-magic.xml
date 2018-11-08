@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="magicBox" 
+		class="com.example.demo.replacer.MagicBox">
+		<replaced-method name="open" replacer="myReplacer"/>
+	</bean>
+		
+	<bean id="myReplacer" 
+		class="com.example.demo.replacer.MyReplacer"></bean>
+		
+	<bean id="magician" 
+		class="com.example.demo.replacer.Magician">
+		<property name="box" ref="magicBox"></property>
+	</bean>
+
+</beans>
