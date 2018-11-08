@@ -1,7 +1,9 @@
 package com.example.demo.ioc.step7;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 // 이 클래스는 빈 설정정보를 갖고 있으니 처리하라고 요청한다.
 @Configuration
@@ -14,6 +16,7 @@ public class CarConfig {
 	
 	// 메소드명을 id로 삼고 메소드가 리턴하는 객체를 빈 컨테이너에 등록하라.
 	@Bean
+	@Primary
 	public CarMaker kiaMaker() {
 		CarMaker maker = new KiaMaker();
 		return maker;
@@ -26,9 +29,12 @@ public class CarConfig {
 	}
 	
 	@Bean
-	public OrderManager manager() {
+	public OrderManager manager(
+//			@Qualifier("hyundaiMaker") 
+			CarMaker maker) {
 		OrderManager manager = new OrderManager();
-		manager.setMaker(kiaMaker());
+//		manager.setMaker(kiaMaker());
+		manager.setMaker(maker);
 		return manager;
 	}
 }

@@ -1,5 +1,7 @@
 package com.example.demo.review.xml;
 
+import org.springframework.beans.factory.annotation.Required;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +17,7 @@ import lombok.NoArgsConstructor;
 public class TeamManager {
 //	private Employee worker = new Programmer();
 //	private Employee worker = new Designer();
+	
 	private Employee worker;
 	
 	public void order() {
@@ -23,6 +26,11 @@ public class TeamManager {
 		worker.work();
 	}
 
+//	@Required
+	public void setWorker(Employee worker) {
+		this.worker = worker;
+	}
+	
 }
 
 

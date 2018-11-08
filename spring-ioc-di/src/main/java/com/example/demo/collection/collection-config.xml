@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+	
+	<!-- 
+		String who = new String("홍길동");
+	 -->
+	<bean id="who" class="java.lang.String">
+		<constructor-arg value="홍길동" />
+	</bean>
+	
+	<util:list id="myList" list-class="java.util.ArrayList">
+		<value>111</value>
+		<value>222</value>
+		<value>111</value>
+		<value>333</value>
+		<ref bean="who" />
+	</util:list>
+	
+	<bean id="example" class="com.example.demo.collection.Example">
+		<property name="list" ref="myList">
+			<!-- <list>
+				<value>111</value>
+				<value>222</value>
+				<value>111</value>
+				<ref bean="who" />
+			</list> -->
+		</property>
+		<property name="map">
+			<map>
+				<entry key="봄">
+					<value>Spring</value>
+				</entry>
+				<entry key="여름">
+					<value>Summer</value>
+				</entry>
+				<entry key="who">
+					<ref bean="who" />
+				</entry>
+			</map>
+		</property>
+		<property name="prop">
+			<props>
+				<prop key="봄">Spring</prop>
+				<prop key="여름">Summer</prop>
+			</props>
+		</property>
+		<property name="set">
+			<set>
+				<value>111</value>
+				<value>222</value>
+				<value>111</value>
+				<ref bean="who" />
+			</set>
+		</property>
+	</bean>
+	
+</beans>

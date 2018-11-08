@@ -1,9 +1,16 @@
 package com.example.demo.review.xml;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Test { // Client
+	@Autowired
+	private List<Employee> emps;
 
 	public static void main(String[] args) {
 		Employee worker = new Programmer(); // 객체생성
@@ -38,6 +45,10 @@ public class Test { // Client
 		TeamManager manager2 = context.getBean(
 				"manager2", TeamManager.class);
 		manager2.order(); // 디자이너가 일을 수행
+		
+		Test test = context.getBean("test", Test.class);
+		test.emps.forEach(System.out::println);
+		
 	}
 
 }
