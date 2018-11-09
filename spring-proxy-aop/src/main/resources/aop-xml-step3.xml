@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<context:component-scan base-package="com.example.demo.aop.xml.step3"/>
+
+	<aop:config>
+		<aop:pointcut expression="execution(int *(..))" id="pointcut"/>
+	
+		<!-- 
+			어드바이스 객체가 구현한 인터페이스에 따라서 자동적으로 모든 어드바이스가 적용됩니다.
+		 -->
+		<aop:advisor advice-ref="myAspect" pointcut-ref="pointcut"/>
+	</aop:config>
+
+</beans>

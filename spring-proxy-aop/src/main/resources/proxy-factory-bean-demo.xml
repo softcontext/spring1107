@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- 
+	Hello hello = new Hello();
+	Advice advice = new MyAdvice();
+ -->
+
+	<bean id="hello" class="com.example.demo.proxy.step7.Hello"></bean>
+	
+	<bean id="advice" class="com.example.demo.proxy.step7.MyAdvice"></bean>
+	
+<!-- 
+	ProxyFactory factory = new ProxyFactory();
+	factory.setTarget(hello);
+	factory.addAdvice(advice);
+	
+	Hello proxy = (Hello) factory.getProxy();
+ -->
+ 	
+	<!-- 
+		ProxyFactoryBean은 target 객체를 프록싱 하는 객체를 빈 컨테이너에 등록한다.
+	 -->
+	<bean id="proxy" 
+		class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="hello"></property>
+		<property name="interceptorNames">
+			<list>
+				<value>advice</value>
+			</list>
+		</property>
+	</bean>
+
+</beans>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<context:component-scan base-package="com.example.demo.aop.xml.step5"/>
+
+	<!-- 
+	<aop:config proxy-target-class="true">
+		<aop:pointcut expression="execution(int *(..))" id="pointcut"/>
+	
+		<aop:aspect ref="myAspect">
+			<aop:before method="myBefore" pointcut-ref="pointcut"/>
+			<aop:around method="myAround" pointcut-ref="pointcut"/>
+			<aop:after-returning method="myAfterReturning" pointcut-ref="pointcut"/>
+			<aop:after-throwing method="myAfterThrowing" pointcut-ref="pointcut"/>
+			<aop:after method="myAfter" pointcut="execution(* two()) or execution(* one2())"/>
+		</aop:aspect>
+	</aop:config>
+	 -->
+	
+	<!-- AOP 설정을 애노테이션으로 한다고 통보한다. -->
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+
+</beans>
