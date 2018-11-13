@@ -2,7 +2,9 @@ package com.example.demo.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -21,6 +25,8 @@ public class EmpDaoImpl implements EmpDao {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	private SimpleJdbcInsert jdbcInsert;
+	@Autowired
+	private NamedParameterJdbcTemplate nTemplate;
 	
 	private RowMapper<Emp> rowMapper = new RowMapper<Emp>() {
 		@Override
@@ -68,14 +74,28 @@ public class EmpDaoImpl implements EmpDao {
 
 	@Override
 	public int update(Emp emp) {
-		String sql = "update emp set ename=?, job=?, sal=? "
-				+ "where empno=?";
+//		String sql = "update emp set ename=?, job=?, sal=? "
+//				+ "where empno=?";
+//		
+//		return jdbcTemplate.update(sql,
+//				emp.getEname(), 
+//				emp.getJob(), 
+//				emp.getSal(), 
+//				emp.getEmpno());
 		
-		return jdbcTemplate.update(sql,
-				emp.getEname(), 
-				emp.getJob(), 
-				emp.getSal(), 
-				emp.getEmpno());
+		// 순서 기반 위치보유자 ? 대신, 이름 기반 위치보유자 : 를 사용하면
+		// 파라미터로 받은 값을 SQL 문자열과 결합할 때,
+		// 순서가 헷갈려서 벌어지는 실수를 예방할 수 있습니다.
+		String sql = "update EMP set ename=:ename, job=:job, sal=:sal "
+		+ "where empno=:key";
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("key", emp.getEmpno());
+		map.put("ename", emp.getEname());
+		map.put("job", emp.getJob());
+		map.put("sal", emp.getSal());
+		
+		return nTemplate.update(sql, map);
 	}
 
 	@Override
@@ -106,4 +126,34 @@ public class EmpDaoImpl implements EmpDao {
 		return jdbcTemplate.queryForObject(sql, rowMapper, empno);
 	}
 
+	// save 메소드는 insert/update를 모두 지원하는 upsert 메소드입니다.
+	public int save(Emp emp) {
+		
+		// 키 값이 없다면(0 값인 상태) 새 로우를 추가하는 insert 쿼리를 수행한다.
+		if (emp.getEmpno() == 0) {
+			
+			Map<String, Object> paramMap = new HashMap<>();
+			paramMap.put("ename", emp.getEname());
+			paramMap.put("job", emp.getJob());
+			paramMap.put("sal", emp.getSal());
+			
+			Number number = jdbcInsert.executeAndReturnKey(paramMap);
+			emp.setEmpno(number.intValue());
+			return 1;
+		} else {
+			
+			// 키 값이 있다면 기존 로우를 수정하는 update 쿼리를 수행한다.
+			String sql = "update EMP set ename=:ename, job=:job, sal=:sal where empno=:key";
+			// 멤버변수와 칼럼명이 다르다면 BeanPropertySqlParameterSource를
+			// 사용할 수 없다. 이 때, MapSqlParameterSource를 사용한다.
+			SqlParameterSource paramSource = new MapSqlParameterSource()
+					.addValue("ename", emp.getEname())
+					.addValue("job", emp.getJob())
+					.addValue("sal", emp.getSal())
+					.addValue("key", emp.getEmpno());
+			
+			return nTemplate.update(sql, paramSource);
+		}
+	}
+	
 }

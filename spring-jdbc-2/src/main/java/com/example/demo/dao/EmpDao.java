@@ -11,6 +11,8 @@ public interface EmpDao {
 	public int update(Emp emp);
 	public int delete(int empno);
 	
+	public int save(Emp emp);
+	
 	// 조회쿼리: 테이블의 로우의 상태정보가 변하지 않는다.
 	public List<Emp> findAll();
 	public int count();
