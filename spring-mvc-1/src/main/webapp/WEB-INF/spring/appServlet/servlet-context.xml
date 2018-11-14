@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+	xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- 
+		@RequestMapping을 처리한다.
+	 -->
+	<annotation-driven />
+
+	<!-- 정적 리소스 폴더에 접근이름과 실제 위치를 지정한다. -->
+	<resources mapping="/public/**" location="/resources/" />
+
+	<!-- 
+		Servlet Framework ====> Request ====> DS ==URI==> HM
+		==연동할 컨트롤러의 메소드==> DS ====> Controller
+		====> Service ====> DAO ====> DB
+		====> DAO ====> Service ====> Controller
+		==데이터+뷰문자열==> DS ==뷰문자열("home")==> VR
+		==뷰문자열("/WEB-INF/views/home.jsp")==> DS
+		====> JSP
+	 -->
+	<beans:bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<!-- @Controller 애노테이션을 찾아서 빈 컨테이너에 등록한다. -->
+	<context:component-scan
+		base-package="com.example.demo" />
+		
+	<!-- 
+		인터셉터는 프론트 컨트롤러(DS)와 백엔드 컨트롤러(@Controller) 사이에서 
+		작동하는 일종의 필터다. -->
+	<interceptors>
+		<interceptor>
+			<!-- 매핑 설정을 복수로 적용할 수 있다. -->
+			<mapping path="/*" />
+			<beans:bean
+				class="com.example.demo.interceptor.MyLogInterceptor" />
+		</interceptor>
+	</interceptors>
+
+</beans:beans>

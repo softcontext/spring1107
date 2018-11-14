@@ -43,12 +43,16 @@ public class EmpDaoImpl implements EmpDao {
 		
 		// 수정 메소드는 영향 받은 로우의 개수 값을 리턴한다.
 		int affected = jdbcTemplate.update(sql,
-				emp.getEmpno(), 
-				emp.getEname(), 
-				emp.getJob(), 
-				emp.getSal());
+				emp.getEmpno(), emp.getEname(), emp.getJob(), emp.getSal());
 		
 		return affected;
+		
+		/*
+		* 트랜잭션 테스트
+		*/
+//		System.out.println("영향받은 로우의 개수 = " + affected);
+//		
+//		throw new RuntimeException("트랜잭션 테스트 용 언체크드 예외");
 	}
 
 	@Override

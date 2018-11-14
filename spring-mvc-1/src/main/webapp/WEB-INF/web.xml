@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<!-- 
+		contextConfigLocation 서블릿 컨텍스트 레벨의 변수를 전달하면
+		스프링은 root-context.xml 파일을 처리하여 빈 컨테이너를 구성합니다.
+		root-context 레벨의 빈 컨테이너에 전역 자원을 주로 등록합니다.
+		예: DataSource
+	 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+	</context-param>
+
+	<!-- 
+		웹서버가 기동할 때, ContextLoaderListener의 로직이 작동합니다.
+		이 때, contextConfigLocation으로 전달된 요청이 처리됩니다.
+	 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!-- 
+			DispatcherServlet에게 servlet-context.xml을 파라미터로 전달합니다.
+			xml 을 처리하여 servlet-context 레벨의 빈 컨테이너를 구성합니다.
+			servlet-context 레벨의 컨테이너는 root-context 레벨의 컨테이너의 자식 컨테이너로 설정된다.
+			서블릿과 관련 자원(클라이언트와 대화할 때 사용해야 하는 자원)을 주로 등록합니다.
+			예: 이미지 폴더 위치, 뷰 파일(JSP) 위치, 다국어 처리, 파일 업로드 관련 빈 설정
+		 -->
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>myServlet</servlet-name>
+		<servlet-class>com.example.demo.servlet.HomeServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>myServlet</servlet-name>
+		<url-pattern>/home.do</url-pattern>
+	</servlet-mapping>
+
+</web-app>
