@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <div id="target">
+
+    </div>
+    <div id="control">
+      <button type="button" id="btnGetAll">GET ALL</button>
+    </div>
+    <div class="info">
+      <pre>
+        Access to XMLHttpRequest at 'http://localhost:8080/emps'
+        from origin(주소창에 표시되는 도메인) 'null' has been blocked
+        by CORS policy: No 'Access-Control-Allow-Origin' header
+        is present on the requested resource.
+      </pre>
+    </div>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript">
+      let btnGetAll = document.getElementById('btnGetAll');
+      let target = document.getElementById('target');
+
+      btnGetAll.addEventListener('click', function () {
+        axios.get('http://localhost:8080/emps')
+          .then(function (response) {
+            // handle success
+            console.log(response);
+
+            let data = response.data.data;
+            target.innerText = JSON.stringify(data);
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+          .then(function () {
+            // always executed
+          });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.EmpDao">
+	
+	<insert id="insert">
+		insert into EMP (ename, job, sal) 
+		values (#{ename}, #{job}, #{sal})
+		
+		<selectKey order="AFTER" keyProperty="empno" resultType="int" >
+			select LAST_INSERT_ID() as empno
+		</selectKey>
+	</insert>
+	
+	<update id="update">
+		update EMP set ename=#{ename}, job=#{job}, sal=#{sal} 
+		where empno=#{empno}
+	</update>
+	
+	<delete id="delete">
+		delete from EMP where empno=#{empno}
+	</delete>
+	
+	<select id="findAll" resultMap="empRowMapper">
+		select * from emp order by empno asc
+	</select>
+	
+	<select id="count" resultType="int">
+		select count(*) from emp
+	</select>
+
+	<select id="findOne" resultType="Emp">
+		select * from emp where empno=#{empno}
+	</select>
+	
+	<resultMap type="Emp" id="empRowMapper">
+		<result property="empno" column="empno"/>
+		<result property="ename" column="ename"/>
+		<result property="job" column="job"/>
+		<result property="sal" column="sal"/>
+	</resultMap>
+	
+	<select id="findBySkipLimit" resultMap="empRowMapper">
+		select * from emp order by empno asc limit #{skip}, #{limit}
+	</select>
+	
+	<select id="findByPageSize" resultMap="empRowMapper">
+	<![CDATA[
+		select * from emp order by empno asc limit #{skip}, #{limit}
+	]]>
+	</select>
+	
+	<!-- 
+		select * from emp 
+		where empno between #{start} and #{end}
+		order by empno asc
+		
+		select * from emp 
+		where empno >= #{start} and empno <= #{end}
+		order by empno asc
+		대신 >, < 기호 사용 시 에러가 발생한다.
+		
+		해결 방법 2가지
+		
+		1. 치환기호를 사용한다.
+		select * from emp 
+		where empno &gt;= #{start} and empno &lt;= #{end}
+		order by empno asc
+		
+		2. CDATA Section으로 감싼다. 
+		범위 안에 태그가 존재하지 않는다는 뜻이다.
+		
+	 -->
+	<select id="findByStartEnd" resultMap="empRowMapper">
+	<![CDATA[
+		select * from emp 
+		where empno >= #{start} and empno <= #{end}
+		order by empno asc
+	]]>
+	</select>
+
+</mapper>
+
+
+
+
+
+
