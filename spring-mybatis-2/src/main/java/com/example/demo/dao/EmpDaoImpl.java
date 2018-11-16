@@ -36,8 +36,8 @@ public class EmpDaoImpl implements EmpDao {
 
 	@Override
 	public List<Emp> findAll() {
-		return session
-			.selectList("com.example.demo.dao.EmpDao.findAll");
+		return session.selectList(
+				"com.example.demo.dao.EmpDao.findAll");
 	}
 
 	@Override
@@ -52,18 +52,14 @@ public class EmpDaoImpl implements EmpDao {
 		return null;
 	}
 
-	//-----------------------------------
-	
 	@Override
 	public List<Emp> findByStartEnd(int start, int end) {
 		Map<String, Integer> map = new HashMap<>();
         map.put("start", start);
-        map.put("end", end); // 개수
+        map.put("end", end);
 	        
-		return session
-				.selectList(
-					"com.example.demo.dao.EmpDao.findByStartEnd", 
-					map);
+		return session.selectList(
+				"com.example.demo.dao.EmpDao.findByStartEnd", map);
 	}
 
 	@Override
@@ -72,10 +68,8 @@ public class EmpDaoImpl implements EmpDao {
         map.put("skip", skip);
         map.put("limit", limit); // 개수
 	        
-		return session
-				.selectList(
-					"com.example.demo.dao.EmpDao.findBySkipLimit", 
-					map);
+		return session.selectList(
+				"com.example.demo.dao.EmpDao.findBySkipLimit", map);
 	}
 
 	@Override
@@ -89,10 +83,39 @@ public class EmpDaoImpl implements EmpDao {
         map.put("skip", skip);
         map.put("limit", size); // 개수
         
-		return session
-				.selectList(
-						"com.example.demo.dao.EmpDao.findByPageSize", 
-						map);
+		return session.selectList(
+				"com.example.demo.dao.EmpDao.findByPageSize", map);
+	}
+
+	@Override
+	public List<Emp> search(Map<String, String> map) {
+		/*
+		 * 1. 빈 문자열을 null로 바꾼다.
+		 * 2. 매퍼 xml에서 if 조건에 빈 문자열도 테스트한다.
+		 */
+		
+		// #1
+		map.forEach((key, value) -> {
+			if ("".equals(value)) {
+				map.put(key, null);
+			}
+		});
+		
+//		System.out.println(map.get("job") == null); // true
+//		System.out.println(map.get("job") instanceof String); // false
+		
+		return session.selectList(
+				"com.example.demo.dao.EmpDao.search", map);
+	}
+
+	@Override
+	public List<Emp> findByPageSizeUsingBind(int page, int size) {
+		Map<String, Integer> map = new HashMap<>();
+        map.put("page", page);
+        map.put("size", size); // 개수
+        
+		return session.selectList(
+			"com.example.demo.dao.EmpDao.findByPageSizeUsingBind", map);
 	}
 
 }

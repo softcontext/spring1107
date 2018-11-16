@@ -49,6 +49,15 @@
 	]]>
 	</select>
 	
+	<select id="findByPageSizeUsingBind" resultMap="empRowMapper">
+		<bind name="skip" value="@com.example.demo.util.MyUtil@pageToSkip(page, size)" />
+	<![CDATA[
+		select * from emp 
+		order by empno asc 
+		limit #{skip}, #{size}
+	]]>
+	</select>
+	
 	<!-- 
 		select * from emp 
 		where empno between #{start} and #{end}
@@ -78,10 +87,53 @@
 	]]>
 	</select>
 
+<!-- 
+	public List<Emp> search(Map<String, String> map);
+ -->
+ 
+<!-- 
+	<![CDATA[
+		select * from emp 
+		where ename like CONCAT('%',#{ename},'%')
+		and job like CONCAT('%',#{job},'%')
+		and sal>=#{salMin} and sal<=#{salMax}
+	]]>	
+	
+		select * from emp 
+		where 
+		<if test="ename != null">
+			ename like CONCAT('%',#{ename},'%')
+		</if>
+		<if test="job != null">
+			and job like CONCAT('%',#{job},'%')
+		</if>
+		<if test="salMin != null and salMax != null">
+			and sal <![CDATA[>=]]> #{salMin} 
+			and sal <![CDATA[<=]]> #{salMax}
+		</if>
+		
+		trim 태그 작동방식
+		1. 안쪽에 문자열이 존재하면 prefix 값을 먼저 출력한다.
+		2. prefix 값인 문자열 다음에 AND|OR가 나오면 삭제한다.
+ -->
+  
+	<select id="search" resultMap="empRowMapper">
+		<bind name="pattern" value="'%' + _parameter.get('ename') + '%'" />
+		select * from emp 
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="ename != null">
+				ename like CONCAT(#{pattern})
+			</if>
+			<if test="job != null">
+				and job like CONCAT('%',#{job},'%')
+			</if>
+			<if test="salMin != null">
+				and sal <![CDATA[>=]]> #{salMin} 
+			</if>
+			<if test="salMax != null">
+				and sal <![CDATA[<=]]> #{salMax}
+			</if>
+		</trim>
+	</select>
+
 </mapper>
-
-
-
-
-
-
