@@ -2,6 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.dao.EmpDao">
 	
+	<resultMap type="Emp" id="empRowMapper">
+		<result property="empno" column="empno"/>
+		<result property="ename" column="ename"/>
+		<result property="job" column="job"/>
+		<result property="sal" column="sal"/>
+	</resultMap>
+	
 	<insert id="insert">
 		insert into EMP (ename, job, sal) 
 		values (#{ename}, #{job}, #{sal})
@@ -31,101 +38,93 @@
 	<select id="findOne" resultType="Emp">
 		select * from emp where empno=#{empno}
 	</select>
-	
-	<resultMap type="Emp" id="empRowMapper">
-		<result property="empno" column="empno"/>
-		<result property="ename" column="ename"/>
-		<result property="job" column="job"/>
-		<result property="sal" column="sal"/>
-	</resultMap>
-	
-	<select id="findBySkipLimit" resultMap="empRowMapper">
-		select * from emp order by empno asc limit #{skip}, #{limit}
-	</select>
-	
-	<select id="findByPageSize" resultMap="empRowMapper">
-	<![CDATA[
-		select * from emp order by empno asc limit #{skip}, #{limit}
-	]]>
-	</select>
-	
-	<select id="findByPageSizeUsingBind" resultMap="empRowMapper">
-		<bind name="skip" value="@com.example.demo.util.MyUtil@pageToSkip(page, size)" />
-	<![CDATA[
-		select * from emp 
-		order by empno asc 
-		limit #{skip}, #{size}
-	]]>
-	</select>
-	
+
 	<!-- 
+		쿼리문에서 >, < 기호 사용 시 에러가 발생할 때 해결 방법 3가지
+		
+		1. between 문법을 대신 사용한다.
 		select * from emp 
 		where empno between #{start} and #{end}
 		order by empno asc
 		
-		select * from emp 
-		where empno >= #{start} and empno <= #{end}
-		order by empno asc
-		대신 >, < 기호 사용 시 에러가 발생한다.
-		
-		해결 방법 2가지
-		
-		1. 치환기호를 사용한다.
+		2. 치환기호를 사용한다.
 		select * from emp 
 		where empno &gt;= #{start} and empno &lt;= #{end}
 		order by empno asc
 		
-		2. CDATA Section으로 감싼다. 
+		3. CDATA Section으로 감싼다. 
 		범위 안에 태그가 존재하지 않는다는 뜻이다.
-		
 	 -->
 	<select id="findByStartEnd" resultMap="empRowMapper">
-	<![CDATA[
-		select * from emp 
-		where empno >= #{start} and empno <= #{end}
-		order by empno asc
-	]]>
+		<![CDATA[
+			select * from emp 
+			where empno >= #{start} and empno <= #{end}
+			order by empno asc
+		]]>
 	</select>
 
-<!-- 
-	public List<Emp> search(Map<String, String> map);
- -->
- 
-<!-- 
-	<![CDATA[
-		select * from emp 
-		where ename like CONCAT('%',#{ename},'%')
-		and job like CONCAT('%',#{job},'%')
-		and sal>=#{salMin} and sal<=#{salMax}
-	]]>	
+	<select id="findBySkipLimit" resultMap="empRowMapper">
+		<![CDATA[
+			select * from emp order by empno asc 
+			limit #{skip}, #{limit}
+		]]>
+	</select>
 	
-		select * from emp 
-		where 
-		<if test="ename != null">
-			ename like CONCAT('%',#{ename},'%')
-		</if>
-		<if test="job != null">
-			and job like CONCAT('%',#{job},'%')
-		</if>
-		<if test="salMin != null and salMax != null">
-			and sal <![CDATA[>=]]> #{salMin} 
-			and sal <![CDATA[<=]]> #{salMax}
-		</if>
-		
+	<select id="findByPageSize" resultMap="empRowMapper">
+		<![CDATA[
+			select * from emp order by empno asc 
+			limit #{skip}, #{limit}
+		]]>
+	</select>
+	
+	<!-- 
+		static 메소드 pageToSkip()를 호출하여 page, size 값을 주고
+		skip 값을 얻어서 bind 태그 내 변수 skip에 담고 쿼리문에서 사용한다.
+	 -->
+	<select id="findByPageSizeUsingBind" resultMap="empRowMapper">
+		<bind name="skip" value="@com.example.demo.util.MyUtil@pageToSkip(page, size)" />
+		<![CDATA[
+			select * from emp 
+			order by empno asc 
+			limit #{skip}, #{size}
+		]]>
+	</select>
+	
+	<!-- 
 		trim 태그 작동방식
-		1. 안쪽에 문자열이 존재하면 prefix 값을 먼저 출력한다.
+		1. 태그 안쪽에 문자열이 존재하면 prefix 값을 먼저 출력한다.
 		2. prefix 값인 문자열 다음에 AND|OR가 나오면 삭제한다.
- -->
-  
+		
+		<select id="search" resultMap="empRowMapper">
+			select * from emp 
+			<trim prefix="WHERE" prefixOverrides="AND|OR">
+				<if test="ename != null">
+					ename like CONCAT('%',#{ename},'%')
+				</if>
+				<if test="job != null">
+					and job like CONCAT('%',#{job},'%')
+				</if>
+				<if test="salMin != null">
+					and sal <![CDATA[>=]]> #{salMin} 
+				</if>
+				<if test="salMax != null">
+					and sal <![CDATA[<=]]> #{salMax}
+				</if>
+			</trim>
+		</select>
+		
+		CONCAT('%',#{ename},'%') 대신 bind 태그를 사용할 수 있다.
+	 -->
 	<select id="search" resultMap="empRowMapper">
-		<bind name="pattern" value="'%' + _parameter.get('ename') + '%'" />
 		select * from emp 
 		<trim prefix="WHERE" prefixOverrides="AND|OR">
 			<if test="ename != null">
-				ename like CONCAT(#{pattern})
+				<bind name="patternEname" value="'%' + _parameter.get('ename') + '%'" />
+				ename like #{patternEname}
 			</if>
 			<if test="job != null">
-				and job like CONCAT('%',#{job},'%')
+				<bind name="patternJob" value="'%' + _parameter.get('job') + '%'" />
+				and job like #{patternJob}
 			</if>
 			<if test="salMin != null">
 				and sal <![CDATA[>=]]> #{salMin} 
