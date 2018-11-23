@@ -20,6 +20,9 @@ public interface BoardMapper {
 	@Select("SELECT COUNT(*) FROM board")
 	public int count();
 
+	/*
+	 * 미 사용
+	 */
 	@Select("SELECT * FROM board ORDER BY id DESC")
 	public List<Board> findAll();
 
