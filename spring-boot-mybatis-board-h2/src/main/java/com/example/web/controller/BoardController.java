@@ -1,5 +1,6 @@
 package com.example.web.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +33,39 @@ public class BoardController {
 	@GetMapping()
 	public ModelAndView getBoardsView(
 			@RequestParam(name="page", required=false, defaultValue="1") int page,
-			@RequestParam(name="size", required=false, defaultValue="10") int size,
-			@RequestParam(name="bsize", required=false, defaultValue="5") int bsize) {
-		ModelAndView mav = new ModelAndView("board_list");
+			@RequestParam(name="size", required=false, defaultValue="20") int size,
+			@RequestParam(name="bsize", required=false, defaultValue="10") int bsize,
+			HttpServletRequest req) {
+		System.out.println(req.getRequestURL());
+		// http://localhost:8080/boards
+		
+//		ModelAndView mav = new ModelAndView("board_list");
+//		// 게시글 데이터
+//		mav.addObject("boards", boardMapper.selectByLimit(page, size));
+//		// 페이징 처리와 관련된 데이터
+//		mav.addObject("pager", new Pager(page, size, bsize, boardMapper.count()));
+		
+		ModelAndView mav = new ModelAndView("board_list2");
+		
 		// 게시글 데이터
 		mav.addObject("boards", boardMapper.selectByLimit(page, size));
+		
 		// 페이징 처리와 관련된 데이터
-		mav.addObject("pager", new Pager(page, size, bsize, boardMapper.count()));
+//		mav.addObject("pager", new Pager(page, size, bsize, 
+//				boardMapper.count(), req.getRequestURL().toString()));
+		
+		// 페이징 처리와 관련된 데이터
+//		mav.addObject("pager", new Pager(page, 
+//				boardMapper.count(), req.getRequestURL().toString()));
+
+		// 페이징 처리와 관련된 데이터
+		mav.addObject("pager", new Pager(page, size, bsize, 
+				boardMapper.count(), req));
+		
+		// 페이징 처리와 관련된 데이터
+//		mav.addObject("pager", new Pager(page, 
+//				boardMapper.count(), req));		
+		
 		return mav;
 	}
 	
