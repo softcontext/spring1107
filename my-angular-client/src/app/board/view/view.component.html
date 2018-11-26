@@ -1,0 +1,59 @@
+<div class="bs-example">
+  <form class="form-horizontal">
+    <div class="form-group">
+      <label for="title" class="control-label col-xs-2">Title</label>
+      <div class="col-xs-10">
+        <!-- <input type="text" class="form-control" id="title" name="title" placeholder="Title" required
+          value="${board.title }" readonly="readonly"> -->
+        <input type="text" class="form-control" id="title" name="title" placeholder="Title" required
+            value="{{board?.title }}" readonly="readonly">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="writer" class="control-label col-xs-2">Writer</label>
+      <div class="col-xs-10">
+        <!-- <input type="text" class="form-control" id="writer" name="writer" placeholder="Writer" required
+          value="${board.writer }" readonly="readonly"> -->
+        <input type="text" class="form-control" id="writer" name="writer" placeholder="Writer" required
+            value="{{board?.writer }}" readonly="readonly">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="content" class="control-label col-xs-2">Content</label>
+      <div class="col-xs-10">
+        <!-- <textarea class="form-control" rows="20" id="content" name="content" placeholder="Content" required
+          readonly="readonly">${board.content }</textarea> -->
+        <textarea class="form-control" rows="20" id="content" name="content" placeholder="Content" required
+            readonly="readonly">{{board?.content }}</textarea>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="regDate" class="control-label col-xs-2">Date</label>
+      <div class="col-xs-10">
+        <!-- <input type="text" class="form-control" id="regDate" name="regDate" placeholder="Date" required
+          value="<fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss" value="${board.regDate }" />" readonly="readonly"> -->
+        <input type="text" class="form-control" id="regDate" name="regDate" placeholder="Date" required
+            value="{{board?.regDate }}" readonly="readonly">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-xs-offset-2 col-xs-10">
+        <!-- <a href="<c:url value='/boards'/>" class="btn btn-primary">List</a> -->
+        <a routerLink="/boards" class="btn btn-primary">List</a>
+        <!-- <c:if test="${not empty user }">
+          <c:if test="${user.email == board.writer }">
+            <a href="<c:url value='/boards/delete/${board.id }'/>" class="btn btn-primary">Delete</a>
+            <a href="<c:url value='/boards/update/${board.id }'/>" class="btn btn-primary">Update</a>
+          </c:if>
+        </c:if> -->
+        <!-- <span *ngIf="user"> -->
+          <a (click)="delete()" class="btn btn-primary">Delete</a>
+          <a routerLink="{{'/boards/update/' + board?.id}}" class="btn btn-primary">Update</a>
+        <!-- </span> -->
+      </div>
+    </div>
+  </form>
+</div>
+<div class="">
+  <pre>{{board | json}}</pre>
+</div>

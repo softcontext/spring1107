@@ -1,0 +1,38 @@
+<div class="bs-example">
+  <!-- <form class="form-horizontal" action="<c:url value='/boards/write'/>" method="post"> -->
+  <form class="form-horizontal" #f="ngForm" (ngSubmit)="f.valid && submitForm(f)">
+    <div class="form-group">
+      <label for="title" class="control-label col-xs-2">Title</label>
+      <div class="col-xs-10">
+        <input type="text" class="form-control" id="title" name="title" placeholder="Title" required
+          [(ngModel)]="board.title" #title="ngModel">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="writer" class="control-label col-xs-2">Writer</label>
+      <div class="col-xs-10">
+        <!-- <input type="text" class="form-control" id="writer" name="writer" placeholder="Writer" required
+          value="${user.email }" readonly="readonly"> -->
+        <input type="text" class="form-control" id="writer" name="writer" placeholder="Writer" required
+            [(ngModel)]="board.writer" #writer="ngModel">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="content" class="control-label col-xs-2">Content</label>
+      <div class="col-xs-10">
+        <textarea class="form-control" rows="20" id="content" name="content" placeholder="Content" required
+          [(ngModel)]="board.content" #content="ngModel"></textarea>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-xs-offset-2 col-xs-10">
+        <!-- <a href="<c:url value='/boards'/>" class="btn btn-primary">List</a> -->
+        <a routerLink="/boards" class="btn btn-primary">List</a>
+        <button type="submit" class="btn btn-primary" [disabled]="!f.valid">Save</button>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="">
+  <pre>{{board | json}}</pre>
+</div>
