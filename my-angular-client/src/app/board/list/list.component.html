@@ -43,12 +43,10 @@
 
   <div class="row">
     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-      <ul class="pagination" [innerHTML]="pagination">
-        <!--
-        <c:forEach var="link" items="${pager.pagination }">
-          ${link }
-        </c:forEach>
-         -->
+      <ul class="pagination">
+        <li *ngFor="let path of paths" [routerLinkActive]="path.active">
+          <a [routerLink]="[path.link]" [queryParams]="path.params" (click)="navigate(path)">{{path.text}}</a>
+        </li>
       </ul>
     </div>
     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
@@ -59,3 +57,5 @@
     </div>
   </div>
 </div>
+
+<pre>{{paths | json}}</pre>

@@ -20,7 +20,7 @@ import { ViewComponent } from './board/view/view.component';
     ListComponent,
     WriteComponent,
     UpdateComponent,
-    ViewComponent
+    ViewComponent,
   ],
   imports: [
     BrowserModule,

@@ -13,7 +13,6 @@ export class BoardHttpService {
   getBoards(page, size, bsize) {
     return axios.get(this.URL + '?page=' + page + '&size=' + size + '&bsize=' + bsize)
       .then(function(response) {
-        console.log(JSON.stringify(response));
         return response.data;
       });
   }
