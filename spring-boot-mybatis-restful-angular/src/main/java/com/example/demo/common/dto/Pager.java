@@ -91,7 +91,7 @@ public class Pager {
 	}
 	
 	/**
-	 * For JSP, Vue.js
+	 * For JSP
 	 */
 	public void proceedPagination(final String url) {
 		
@@ -150,7 +150,7 @@ public class Pager {
 	}
 	
 	/**
-	 * For Angular
+	 * For Angular, Vue.js
 	 */
 	@Data
 	public static class Param {
